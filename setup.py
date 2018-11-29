@@ -11,7 +11,8 @@ setup(
     package_dir={'': 'src'},
     packages=['kbase_module'],
     install_requires=[
-        'requests>=2.20.0'
+        'requests>=2.20.0',
+        'jsonschema>=2.6.0'
     ],
     python_requires='>=3.5'
 )
