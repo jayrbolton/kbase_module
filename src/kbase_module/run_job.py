@@ -8,10 +8,10 @@ Simply run this with `python run_job.py`
 """
 import sys
 import os
-import jsonschema
-from jsonschema.exceptions import ValidationError
 import json
-import importlib
+
+from kbase_module.utils.validate_method_params import validate_method_params
+from kbase_module.utils.find_and_run_method import find_and_run_method
 
 module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
 sys.path.insert(0, os.path.join(module_path, 'src'))
@@ -23,7 +23,8 @@ def _fatal(msg):
     sys.exit(1)
 
 
-if __name__ == '__main__':
+def main():
+    """Run a single method to completion, reading and writing from json files."""
     input_path = os.path.join(module_path, 'work', 'input.json')
     if not os.path.exists(input_path):
         _fatal('Input JSON does not exist at %s' % input_path)
@@ -33,39 +34,25 @@ if __name__ == '__main__':
         _fatal('%s does not exist' % schema_path)
     with open(input_path, 'r', encoding='utf8') as fd:
         input_data = json.load(fd)
-    with open(schema_path, 'r', encoding='utf8') as fd:
-        schemas = json.load(fd)
-    method_name = input_data['method']
-    if method_name not in schemas:
-        raise Exception('No schema defined for method name: ' + method_name)
     # For some reason, all params for kbase services seem to be wrapped in an extra array
     params = input_data['params'][0]
-    schema = {
-        'type': 'object',
-        'required': schemas[method_name].get('required_params', []),
-        'properties': schemas[method_name].get('params', {})
-    }
+    method_name = input_data['method']
     try:
-        jsonschema.validate(params, schema)
-    except ValidationError as err:
-        _fatal("JSON schema validation error on parameters:\n%s" % str(err))
-    # Get the method from the module (TODO add error handling here)
-    main = importlib.import_module("main")
+        validate_method_params(method_name, params)
+    except RuntimeError as err:
+        _fatal(str(err))
+    # Try to run the method
+    output_data = {'id': input_data.get('id'), 'jsonrpc': '2.0'}
     try:
-        method = getattr(main, method_name)
-    except AttributeError:
-        _fatal('No method found in main.py called %s' % method_name)
-    try:
-        result = method(params)
-        error = None
+        result = find_and_run_method(method_name, params)
+        output_data['result'] = result
     except Exception as err:
-        result = None
-        error = str(err)
-    output_data = {
-        "id": input_data.get('id'),
-        "result": result,
-        "cancelled": 0,
-        "error": error
-    }
+        output_data['error'] = str(err)
+    print(output_data)  # -> stdout
+    # Save to /kb/module/work/output.json
     with open(output_path, 'w', encoding='utf8') as fd:
         json.dump(output_data, fd)
+
+
+if __name__ == '__main__':
+    main()
