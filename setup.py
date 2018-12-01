@@ -9,7 +9,13 @@ setup(
     author_email='info@kbase.us',
     url='https://github.com/jayroblton/kbase_module',
     package_dir={'': 'src'},
-    packages=['kbase_module'],
+    packages=[
+        'kbase_module',
+        'kbase_module.utils'
+    ],
+    scripts=[
+        'src/kbase_module/scripts/entrypoint.sh'
+    ],
     install_requires=[
         'requests>=2',
         'jsonschema>=2',
