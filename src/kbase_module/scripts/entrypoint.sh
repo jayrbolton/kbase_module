@@ -29,9 +29,9 @@ elif [ "${1}" = "async" ] ; then
 elif [ "${1}" = "init" ] ; then
   echo "Nothing to do."
 
-# Bash shell in the container
-elif [ "${1}" = "bash" ] ; then
-  /bin/bash
+# Run shell in the container
+elif [ "${1}" = "bash" ] || [ "${1}" = "shell" ]; then
+  /bin/sh
 
 # Required file for registering the module on the KBase catalog
 elif [ "${1}" = "report" ] ; then
