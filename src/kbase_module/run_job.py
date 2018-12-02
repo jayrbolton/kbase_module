@@ -10,8 +10,7 @@ import sys
 import os
 import json
 
-from kbase_module.utils.validate_method_params import validate_method_params
-from kbase_module.utils.find_and_run_method import find_and_run_method
+from kbase_module.utils.run_method import run_method
 
 module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
 sys.path.insert(0, os.path.join(module_path, 'src'))
@@ -37,14 +36,10 @@ def main():
     # For some reason, all params for kbase services seem to be wrapped in an extra array
     params = input_data['params'][0]
     method_name = input_data['method']
-    try:
-        validate_method_params(method_name, params)
-    except RuntimeError as err:
-        _fatal(str(err))
     # Try to run the method
     output_data = {'id': input_data.get('id'), 'jsonrpc': '2.0'}
     try:
-        result = find_and_run_method(method_name, params)
+        result = run_method(method_name, params)
         output_data['result'] = result
     except Exception as err:
         output_data['error'] = str(err)

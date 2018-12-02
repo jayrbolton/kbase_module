@@ -9,8 +9,7 @@ import json
 import jsonschema
 from jsonschema.exceptions import ValidationError
 
-from kbase_module.utils.validate_method_params import validate_method_params
-from kbase_module.utils.find_and_run_method import find_and_run_method
+from kbase_module.utils.run_method import run_method
 
 app = flask.Flask(__name__)
 
@@ -67,14 +66,9 @@ def root():
     flask.g.request_id = reqdata.get('id')
     params = reqdata.get('params')
     method_name = reqdata['method']
-    # Load and validate the schema
-    try:
-        validate_method_params(method_name, params)
-    except RuntimeError as err:
-        return _err(str(err))
     # Get the module and method from /kb/module
     try:
-        result = find_and_run_method(method_name, params)
+        result = run_method(method_name, params)
         return _ok(result)
     except Exception as err:
         return _err(str(err))
@@ -85,10 +79,20 @@ def not_found(err):
     return _err('404 - Not found', 404)
 
 
+@app.errorhandler(405)
+def method_not_allowed(err):
+    return _err('405 - Method not allowed', 405)
+
+
 @app.errorhandler(Exception)
 @app.errorhandler(500)
 def server_err(err):
-    return _err(str(err), 500)
+    print('ERR!', err)
+    if hasattr(err, 'status_code'):
+        status_code = err.status_code
+    else:
+        status_code = 500
+    return _err(str(err), status_code)
 
 
 if __name__ == '__main__':

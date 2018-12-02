@@ -81,3 +81,19 @@ error('This is an error message')
 ## Development
 
 Run tests with `make test`
+
+## Publishing a new release
+
+To publish a new release, run:
+
+```sh
+$ python setup.py sdist
+```
+
+This will create a gzipped file in `dist/kbase_module-{version}.tar.gz`. Then run:
+
+```sh
+$ anaconda --interactive -u kbase dist/kbase_module-{version}.tar.gz
+```
+
+You need to have anaconda installed and you need to have upload persmissions to the `kbase` group.

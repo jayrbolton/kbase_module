@@ -13,7 +13,7 @@ _subjob_runner_url = os.environ.get('SUBJOB_RUNNER_URL', 'http://subjob')
 _runtime_limit = 3600
 
 
-def run(module, method, params, version='latest', tag='release', asynchronous=False):
+def run_module(module, method, params, version='latest', tag='release', asynchronous=False):
     # kbase_url = os.environ.get('KBASE_ENDPOINT', 'https://ci.kbase.us/services')
     # Make a call to the subjob runner to start the job
     payload = {

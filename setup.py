@@ -7,7 +7,7 @@ setup(
     description='KBase SDK module utilities',
     author='KBase Team',
     author_email='info@kbase.us',
-    url='https://github.com/jayroblton/kbase_module',
+    url='https://github.com/jayrbolton/kbase_module',
     package_dir={'': 'src'},
     packages=[
         'kbase_module',
