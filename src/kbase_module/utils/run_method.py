@@ -7,7 +7,7 @@ import sys
 import importlib
 from inspect import signature
 
-from kbase_module.utils import validate_method_params
+from kbase_module.utils.validate_method_params import validate_method_params
 
 module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
 sys.path.insert(0, os.path.join(module_path, 'src'))
@@ -18,6 +18,7 @@ def run_method(name, params):
     Dynamically load the main module and a method by name.
     Then run the method on a set of params.
     """
+    validate_method_params(name, params)
     main = importlib.import_module("main")
     try:
         method = getattr(main, name)
@@ -26,5 +27,4 @@ def run_method(name, params):
     if not callable(method) or len(signature(method).parameters) != 1:
         raise RuntimeError('Method "%s" should be a function with 1 parameter.' % name)
     # Validate the parameters of the method according to the schema
-    validate_method_params(name, params)
     return method(params)

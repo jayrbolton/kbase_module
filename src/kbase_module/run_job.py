@@ -33,8 +33,12 @@ def main():
         _fatal('%s does not exist' % schema_path)
     with open(input_path, 'r', encoding='utf8') as fd:
         input_data = json.load(fd)
+    if 'params' not in input_data:
+        raise RuntimeError('"params" key not found in %s' % input_path)
+    if 'method' not in input_data:
+        raise RuntimeError('"method" key not found in %s' % input_path)
     # For some reason, all params for kbase services seem to be wrapped in an extra array
-    params = input_data['params'][0]
+    params = input_data['params']
     method_name = input_data['method']
     # Try to run the method
     output_data = {'id': input_data.get('id'), 'jsonrpc': '2.0'}

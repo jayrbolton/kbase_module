@@ -62,14 +62,21 @@ methods_schema = {
 
 def compile_module():
     # Open and decode kbase_module.json
-    with open(os.path.join(module_path, 'kbase_module.json'), 'r') as fd:
+    module_json_path = os.path.join(module_path, 'kbase_module.json')
+    methods_json_path = os.path.join(module_path, 'kbase_methods.json')
+    if not os.path.exists(module_json_path):
+        raise RuntimeError('%s does not exist' % module_json_path)
+    if not os.path.exists(methods_json_path):
+        raise RuntimeError('%s does not exist' % methods_json_path)
+    with open(module_json_path, 'r') as fd:
         module = json.load(fd)
     # Validate kbase_module.json
     jsonschema.validate(module, module_schema)
     # Open and decode kbase_methods.json
-    with open(os.path.join(module_path, 'kbase_methods.json'), 'r') as fd:
+    with open(methods_json_path, 'r') as fd:
         methods = json.load(fd)
     # Validate kbase_methods.json
+    # TODO dupe logic here with utils/validate_method_params
     jsonschema.validate(methods, methods_schema)
     # Write kbase.yml
     with open(os.path.join(module_path, 'kbase.yml'), 'w') as fd:
@@ -96,6 +103,7 @@ def compile_module():
     os.makedirs(os.path.join(module_path, 'ui/narrative'), exist_ok=True)
     for (method_name, config) in methods.items():
         _create_ui_spec(method_name, config, module)
+    # TODO write out the display.yml files
 
 
 def _create_ui_spec(method_name, config, module):
