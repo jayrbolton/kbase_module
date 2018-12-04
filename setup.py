@@ -21,7 +21,8 @@ setup(
         'jsonschema>=2',
         'Flask>=1',
         'gunicorn>19',
-        'gevent>1'
+        'gevent>1',
+        'pyyaml>=3'
     ],
     python_requires='>3'
 )

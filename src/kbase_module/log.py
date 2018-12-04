@@ -1,4 +1,4 @@
-import json
+import yaml
 import os
 import logging
 
@@ -9,9 +9,9 @@ logging.basicConfig(format='%(levelname)-8s %(message)s', level=_log_level)
 
 # Get the module name
 module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
-with open(os.path.join(module_path, 'kbase_module.json'), 'r') as fd:
-    module_data = json.load(fd)
-module_name = module_data['name']
+with open(os.path.join(module_path, 'kbase.yaml'), 'r') as fd:
+    module_data = yaml.load(fd)
+module_name = module_data['module-name']
 
 
 def warning(*msgs):
