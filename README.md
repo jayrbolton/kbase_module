@@ -14,12 +14,11 @@ pip install kbase_module
 
 ### Defining module methods
 
-Use the `kbase_module.method` decorator:
+Create a Python module with the path `src/main.py`. Any function in this module that also has an entry in `kbase_methods.json` will be treated as a KBase module method:
 
 ```py
 from kbase_module import method
 
-@method
 def method_name(params):
     return 'Hello world'
 ```
