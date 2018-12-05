@@ -10,7 +10,8 @@ import sys
 import os
 import json
 
-from kbase_module.utils.run_method import run_method
+from .utils.run_method import run_method
+from .utils.validate_methods import validate_method_params
 
 module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
 sys.path.insert(0, os.path.join(module_path, 'src'))
@@ -28,9 +29,6 @@ def main():
     if not os.path.exists(input_path):
         _fatal('Input JSON does not exist at %s' % input_path)
     output_path = os.path.join(module_path, 'work', 'output.json')
-    schema_path = os.path.join(module_path, 'kbase_methods.json')
-    if not os.path.exists(schema_path):
-        _fatal('%s does not exist' % schema_path)
     with open(input_path, 'r', encoding='utf8') as fd:
         input_data = json.load(fd)
     if 'params' not in input_data:
@@ -40,6 +38,8 @@ def main():
     # For some reason, all params for kbase services seem to be wrapped in an extra array
     params = input_data['params']
     method_name = input_data['method']
+    # Validate the params
+    validate_method_params(method_name, params)
     # Try to run the method
     output_data = {'id': input_data.get('id'), 'jsonrpc': '2.0'}
     try:

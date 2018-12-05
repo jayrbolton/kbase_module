@@ -7,7 +7,7 @@ import sys
 import importlib
 from inspect import signature
 
-from kbase_module.utils.validate_method_params import validate_method_params
+from kbase_module.utils.validate_methods import validate_method_params
 
 module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
 sys.path.insert(0, os.path.join(module_path, 'src'))

@@ -17,12 +17,13 @@ setup(
         'src/kbase_module/scripts/entrypoint.sh'
     ],
     install_requires=[
-        'requests>=2',
-        'jsonschema>=2',
-        'Flask>=1',
-        'gunicorn>19',
-        'gevent>1',
-        'pyyaml>=3'
+        'requests>=2.20',
+        'jsonschema>=2.6',
+        'Flask>=1.0',
+        'gunicorn>=19.9',
+        'gevent>=1.3',
+        'pyyaml>=3.13',
+        'markdown2>=2.3'
     ],
     python_requires='>3'
 )
