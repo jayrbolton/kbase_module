@@ -4,13 +4,13 @@ Also validates the parameters.
 """
 import os
 import sys
-import importlib
 from inspect import signature
 
 from kbase_module.utils.validate_methods import validate_method_params
 
 module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
 sys.path.insert(0, os.path.join(module_path, 'src'))
+import main  # noqa
 
 
 def run_method(name, params):
@@ -19,7 +19,6 @@ def run_method(name, params):
     Then run the method on a set of params.
     """
     validate_method_params(name, params)
-    main = importlib.import_module("main")
     try:
         method = getattr(main, name)
     except AttributeError:

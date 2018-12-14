@@ -66,6 +66,8 @@ def root():
     flask.g.request_id = reqdata.get('id')
     params = reqdata.get('params')
     method_name = reqdata['method']
+    if method_name == 'BREW':
+        return _err("I'm a teapot", 418)
     # Get the module and method from /kb/module
     try:
         result = run_method(method_name, params)

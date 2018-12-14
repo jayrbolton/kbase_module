@@ -17,12 +17,6 @@ module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
 sys.path.insert(0, os.path.join(module_path, 'src'))
 
 
-def _fatal(msg):
-    """Fatal error with log and exit."""
-    sys.stderr.write(msg + '\n')
-    sys.exit(1)
-
-
 def main():
     """Run a single method to completion, reading and writing from json files."""
     input_path = os.path.join(module_path, 'work', 'input.json')
@@ -51,6 +45,12 @@ def main():
     # Save to /kb/module/work/output.json
     with open(output_path, 'w', encoding='utf8') as fd:
         json.dump(output_data, fd)
+
+
+def _fatal(msg):
+    """Fatal error with log and exit."""
+    sys.stderr.write(msg + '\n')
+    sys.exit(1)
 
 
 if __name__ == '__main__':
