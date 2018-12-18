@@ -3,15 +3,15 @@
 Run a method as a one-off job from within a docker container for a module.
 Input data is dropped into /kb/module/work/input.json, and output is set to /kb/module/work/output.json
 
-Simply run this with `python run_job.py`
-    or `python -m kbase_module.run_job` if the package is installed
+This can be run using `./scripts/entrypoint.sh async`
+With an input.json file placed at `/kb/module/work/input.json
 """
 import sys
 import os
 import json
 
-from .utils.run_method import run_method
-from .utils.validate_methods import validate_method_params
+from kbase_module.utils.run_method import run_method
+from kbase_module.utils.validate_methods import validate_method_params
 
 module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
 sys.path.insert(0, os.path.join(module_path, 'src'))

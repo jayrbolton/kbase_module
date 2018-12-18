@@ -8,7 +8,7 @@ set -e
 # Set the number of gevent workers to number of cores * 2 + 1
 # See: http://docs.gunicorn.org/en/stable/design.html#how-many-workers
 calc_workers="$(($(nproc) * 2 + 1))"
-# You can also use the WORKERS environment variable, if present
+# This will also use the WORKERS environment variable, if present
 workers=${WORKERS:-$calc_workers}
 
 # Persistent server mode (aka "dynamic service"):
@@ -38,5 +38,5 @@ elif [ "${1}" = "report" ] ; then
   python -m kbase_module.compile_config
 
 else
-  echo "Unknown command. Valid commands are: test, async, init, bash, or report"
+  echo "Unknown command. Valid commands are: test, async, init, shell, or report"
 fi
