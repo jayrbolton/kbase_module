@@ -7,18 +7,16 @@ This is a Python package that provides utilities for writing [KBase](https://kba
 Install with pip:
 
 ```
-pip install kbase_module
+pip install --extra-index-url https://pypi.anaconda.org/kbase/simple kbase_module
 ```
 
 ## Usage
 
 ### Defining module methods
 
-Create a Python module with the path `src/main.py`. Any function in this module that also has an entry in `kbase_methods.json` will be treated as a KBase module method:
+Create a Python module that has a module with the path `src/main.py`. Any function in this module that also has an entry in `kbase_methods.yaml` will be treated as a KBase module method:
 
 ```py
-from kbase_module import method
-
 def method_name(params):
     return 'Hello world'
 ```
