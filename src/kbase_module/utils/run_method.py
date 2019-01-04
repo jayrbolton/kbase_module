@@ -4,13 +4,19 @@ Also validates the parameters.
 """
 import os
 import sys
+import importlib
 from inspect import signature
 
 from kbase_module.utils.validate_methods import validate_method_params
 
 module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
-sys.path.insert(0, os.path.join(module_path, 'src'))
-import main  # noqa
+main_module_path = os.path.join(module_path, 'src')
+sys.path.insert(0, main_module_path)
+
+try:
+    main = importlib.import_module('main')
+except Exception:
+    raise RuntimeError('Unable to import the main module. Do you have a "main.py" under %s?' % main_module_path)
 
 
 def run_method(name, params, auth_token=None):

@@ -22,8 +22,7 @@ setup(
         'Flask>=1.0',
         'gunicorn>=19.9',
         'gevent>=1.3',
-        # TODO use strictyaml or something better
-        'pyyaml>=3.13',
+        'pyyaml>=3',
         'markdown2>=2.3'
     ],
     python_requires='>3'

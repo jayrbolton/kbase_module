@@ -108,7 +108,7 @@ def after_request(resp):
     resp.headers['Access-Control-Allow-Headers'] = env_allowed_headers
     # Set JSON content type and response length
     resp.headers['Content-Type'] = 'application/json'
-    resp.headers['Content-Length'] = len(resp.content)
+    resp.headers['Content-Length'] = resp.calculate_content_length()
     return resp
 
 
