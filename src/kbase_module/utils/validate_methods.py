@@ -15,8 +15,8 @@ def _validate(name, data, schema):
         path = ['root'] + list(err.path)
         raise RuntimeError('\n'.join([
             'Validation error on %s' % name,
-            '  Message: %s' % err.message,
-            '  Path: %s' % '.'.join(path)
+            '  Message: ' + err.message,
+            '  Path: ' + str(path)
         ]))
 
 
