@@ -13,8 +13,15 @@ workers=${WORKERS:-$calc_workers}
 
 # Persistent server mode (aka "dynamic service"):
 # This is run when there are no arguments
-if [ $# -eq 0 ] ; then
-  gunicorn --worker-class gevent --timeout 1800 --workers $workers -b :5000 --reload kbase_module.run_service:app
+if [ $# -eq 0 ] || [ "${1}" = "serve" ]; then
+  echo "Running as a dynamic service"
+  gunicorn \
+    --worker-class gevent \
+    --timeout 1800 \
+    --workers $n_workers \
+    --bind :5000 \
+    ${DEVELOPMENT:+"--reload"} \
+    src.server:app
 
 # Run tests
 elif [ "${1}" = "test" ] ; then
@@ -38,5 +45,5 @@ elif [ "${1}" = "report" ] ; then
   python -m kbase_module.compile_config
 
 else
-  echo "Unknown command. Valid commands are: test, async, init, shell, or report"
+  echo "Unknown command. Valid commands are: test, async, init, shell, serve, or report"
 fi
