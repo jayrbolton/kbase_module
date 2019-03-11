@@ -1,6 +1,6 @@
-# KBase Module Utils
+# KBase SDK Module Utils
 
-This is a Python package that provides utilities for writing [KBase](https://kbase.us) bioinformatics modules that can run in the narrative or be executed by other modules.
+This is a Python package that provides utilities for writing [KBase](https://kbase.us) SDK bioinformatics modules that can run in the narrative or be executed by other modules.
 
 ## Installation
 
