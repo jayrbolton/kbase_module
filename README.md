@@ -77,7 +77,11 @@ error('This is an error message')
 
 ## Development
 
-Run tests with `make test`
+### Running tests
+
+In one terminal, run **`make serve`**.
+
+In another terminal, run **`make test`**.
 
 ## Publishing a new release
 

@@ -2,21 +2,21 @@
 Find and run a method from within a kbase module.
 Also validates the parameters.
 """
-import os
 import sys
 import importlib
 from inspect import signature
 
+from kbase_module.utils.load_config import load_config
 from kbase_module.utils.validate_methods import validate_method_params
 
-module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
-main_module_path = os.path.join(module_path, 'src')
-sys.path.insert(0, main_module_path)
+config = load_config()
+sys.path.insert(0, config['module_path'])
 
 try:
-    main = importlib.import_module('main')
+    main = importlib.import_module('src.main')
 except Exception:
-    raise RuntimeError('Unable to import the main module. Do you have a "main.py" under %s?' % main_module_path)
+    p = config['module_src_path']
+    raise RuntimeError(f'Unable to import the main module. Do you have a "main.py" under {p}?')
 
 
 def run_method(name, params, auth_token=None):
@@ -29,7 +29,7 @@ def run_method(name, params, auth_token=None):
     try:
         method = getattr(main, name)
     except AttributeError:
-        raise RuntimeError('No method found in main.py called %s' % name)
+        raise RuntimeError(f'No method found in main.py called {name}')
     if not callable(method) or len(signature(method).parameters) != 1:
-        raise RuntimeError('Method "%s" should be a function with 2 params.' % name)
+        raise RuntimeError(f'Method "{name}" should be a function with 2 params.')
     return method(params)

@@ -22,7 +22,7 @@ setup(
         'Flask>=1.0',
         'gunicorn>=19.9',
         'gevent>=1.3',
-        'pyyaml>=3',
+        'pyyaml>=5',
         'markdown2>=2.3'
     ],
     python_requires='>3'

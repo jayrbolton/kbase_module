@@ -1,5 +1,7 @@
-import yaml
 import os
+import yaml
+
+from kbase_module.utils.load_config import load_config
 
 compile_report_template = """{
   "function_places": {},
@@ -12,13 +14,13 @@ compile_report_template = """{
 }
 """
 
-_kbase_module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
-_module_config_path = os.path.join(_kbase_module_path, 'kbase.yaml')
-_compile_report_path = os.path.join(_kbase_module_path, 'work', 'compile_report.json')
-
 if __name__ == '__main__':
-    with open(_module_config_path, 'r') as fd:
-        module = yaml.load(fd.read())
+    config = load_config()
+    with open(config['module_config_path']) as fd:
+        module = yaml.load(fd.read(), Loader=yaml.SafeLoader)
     compile_report_json = compile_report_template.replace("$module_name", module['module-name'])
-    with open(_compile_report_path, 'w') as fd:
+    # TODO insert the git commit hash
+    # TODO insert the SDK version
+    os.makedirs(config['work_path'], exist_ok=True)
+    with open(config['compile_report_path'], 'w') as fd:
         fd.write(compile_report_json)

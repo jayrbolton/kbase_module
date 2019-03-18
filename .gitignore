@@ -1,3 +1,6 @@
+# Test data
+src/test/test_app/work
+
 # Environment variables
 .env
 

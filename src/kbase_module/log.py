@@ -1,17 +1,17 @@
-import yaml
-import os
+# import yaml
+# import os
 import logging
 
-# TODO add colors to the formatting
+from kbase_module.utils.load_config import load_config
 
-_log_level = os.environ.get('LOG_LEVEL', 'WARNING').upper()
-logging.basicConfig(format='%(levelname)-8s %(message)s', level=_log_level)
+# TODO add colors to the formatting
+config = load_config()
+logging.basicConfig(format='%(levelname)-8s %(message)s', level=config['log_level'])
 
 # Get the module name
-module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
-with open(os.path.join(module_path, 'kbase.yaml'), 'r') as fd:
-    module_data = yaml.load(fd)
-module_name = module_data['module-name']
+# with open(os.path.join(config['module_path'], 'kbase.yaml'), 'r') as fd:
+#     module_data = yaml.load(fd)
+# module_name = module_data['module-name']
 
 
 def warning(*msgs):
@@ -32,4 +32,4 @@ def error(*msgs):
 
 def _combine(msgs):
     combined = ' '.join([str(m) for m in msgs])
-    return module_name + ' - ' + combined
+    return combined

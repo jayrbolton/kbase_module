@@ -3,8 +3,7 @@ import yaml
 import jsonschema
 from jsonschema.exceptions import ValidationError
 
-module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
-methods_config_path = os.path.join(module_path, 'kbase_methods.yaml')
+from kbase_module.utils.load_config import load_config
 
 
 def _validate(name, data, schema):
@@ -22,13 +21,15 @@ def _validate(name, data, schema):
 
 def load_method_config():
     """Validate kbase_methods.yaml and return it as a dict."""
-    if not os.path.exists(methods_config_path):
-        raise RuntimeError('%s does not exist' % methods_config_path)
-    with open(methods_config_path, 'r') as fd:
+    config = load_config()
+    p = config['methods_config_path']
+    if not os.path.exists(p):
+        raise RuntimeError(f'{p} does not exist')
+    with open(p) as fd:
         try:
-            schemas = yaml.load(fd.read())
+            schemas = yaml.load(fd.read(), Loader=yaml.SafeLoader)
         except Exception as err:
-            raise RuntimeError('Unable to parse YAML in %s: %s' % (methods_config_path, str(err)))
+            raise RuntimeError(f'Unable to parse YAML in {p}: {err}')
     return schemas
 
 
@@ -36,10 +37,10 @@ def validate_method_params(method_name, params):
     """Load the schema for the method and validate the params."""
     schemas = load_method_config()
     if method_name not in schemas:
-        raise RuntimeError('No method defined in kbase_methods.yaml named "%s"' % method_name)
+        raise RuntimeError(f'No method defined in kbase_methods.yaml named "{method_name}"')
     schema = {'type': 'object'}
     if 'required_params' in schemas[method_name]:
         schema['required'] = schemas[method_name]['required_params']
     if 'params' in schemas[method_name]:
         schema['properties'] = schemas[method_name]['params']
-    _validate('params to "%s"' % method_name, params, schema)
+    _validate(f'params to "{method_name}"', params, schema)

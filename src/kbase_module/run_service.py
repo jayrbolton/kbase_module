@@ -15,7 +15,7 @@ from kbase_module.utils.run_method import run_method
 app = flask.Flask(__name__)
 
 # Schema for the top-level RPC request
-rpcschema = {
+_RPC_SCHEMA = {
     'type': 'object',
     'required': ['method'],
     # Let's be pretty loose here for backwards compatibility
@@ -39,12 +39,12 @@ def root():
     try:
         reqdata = json.loads(flask.request.get_data())
     except ValueError as err:
-        return _err('Unable to decode JSON: %s' % str(err))
+        return _err(f'Unable to decode JSON: {err}')
     # Validate RPC structure
     try:
-        jsonschema.validate(reqdata, rpcschema)
+        jsonschema.validate(reqdata, _RPC_SCHEMA)
     except ValidationError as err:
-        return _err('Invalid RPC format: %s' % err.message)
+        return _err(f'Invalid RPC format: {err.message}')
     flask.g.request_id = reqdata.get('id')
     params = reqdata.get('params')
     method_name = reqdata['method']
@@ -61,7 +61,7 @@ def root():
 
 def _err(msg, status=400):
     """Generic error response"""
-    sys.stderr.write("Error: %s\n" % msg)
+    sys.stderr.write(f"Error: {msg}\n")
     return (flask.jsonify({
         'error': msg,
         'id': flask.g.request_id,
@@ -71,7 +71,7 @@ def _err(msg, status=400):
 
 def _ok(data, status=200):
     """Generic valid result."""
-    sys.stdout.write("Response: %s\n" % str(data))
+    sys.stdout.write("Response: {data}\n")
     return (flask.jsonify({
         'result': data,
         'id': flask.g.request_id,

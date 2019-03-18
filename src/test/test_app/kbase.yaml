@@ -1,0 +1,6 @@
+module-name: echo_test
+module-description: Echo a message back to you.
+service-language: python
+module-version: 0.0.1
+owners:
+  - username

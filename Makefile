@@ -1,7 +1,7 @@
-.PHONY: test
-
-SHELL := /bin/bash
+.PHONY: test serve
 
 test:
-	pip install -e .
-	python -m unittest discover src/test
+	sh scripts/run_tests.sh
+
+serve:
+	sh scripts/run_server.sh

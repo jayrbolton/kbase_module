@@ -12,23 +12,20 @@ import json
 
 from kbase_module.utils.run_method import run_method
 from kbase_module.utils.validate_methods import validate_method_params
-
-module_path = os.environ.get('KBASE_MODULE_PATH', '/kb/module')
-sys.path.insert(0, os.path.join(module_path, 'src'))
+from kbase_module.utils.load_config import load_config
 
 
 def main():
     """Run a single method to completion, reading and writing from json files."""
-    input_path = os.path.join(module_path, 'work', 'input.json')
-    if not os.path.exists(input_path):
-        _fatal('Input JSON does not exist at %s' % input_path)
-    output_path = os.path.join(module_path, 'work', 'output.json')
-    with open(input_path, 'r', encoding='utf8') as fd:
+    config = load_config()
+    if not os.path.exists(config['input_json_path']):
+        _fatal(f"Input JSON does not exist at {config['input_json_path']}")
+    with open(config['input_json_path']) as fd:
         input_data = json.load(fd)
     if 'params' not in input_data:
-        raise RuntimeError('"params" key not found in %s' % input_path)
+        raise RuntimeError(f"'params' key not found in {config['input_json_path']}")
     if 'method' not in input_data:
-        raise RuntimeError('"method" key not found in %s' % input_path)
+        raise RuntimeError(f"'method' key not found in {config['input_json_path']}")
     # For some reason, all params for kbase services seem to be wrapped in an extra array
     params = input_data['params']
     method_name = input_data['method']
@@ -43,7 +40,7 @@ def main():
         output_data['error'] = str(err)
     print(output_data)  # -> stdout
     # Save to /kb/module/work/output.json
-    with open(output_path, 'w', encoding='utf8') as fd:
+    with open(config['output_json_path'], 'w') as fd:
         json.dump(output_data, fd)
 
 

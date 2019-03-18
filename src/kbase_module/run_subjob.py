@@ -5,12 +5,12 @@ Most likely, the subjob runner service will have been started in another,
 sibling docker container accessible via http://subjob
 """
 import time
-import os
 import requests
 import json
 
-_subjob_runner_url = os.environ.get('SUBJOB_RUNNER_URL', 'http://subjob')
-_runtime_limit = 3600
+from kbase_module.utils.load_config import load_config
+
+config = load_config()
 
 
 def run_module(module, method, params, version='latest', tag='release', asynchronous=False):
@@ -28,7 +28,7 @@ def run_module(module, method, params, version='latest', tag='release', asynchro
         'version': 1.1
     }
     resp = requests.post(
-        _subjob_runner_url,
+        config['subjob_runner_url'],
         data=json.dumps(payload)
     ).json()
     # TODO check the callback server implementation for proper response format
@@ -44,7 +44,7 @@ def check_job(job_id):
     Returns a dict like {'finished': boolean, 'result': data}
     """
     payload = {'method': 'X._check_job', 'params': {'job_id': job_id}}
-    resp = requests.post(_subjob_runner_url, data=json.dumps(payload)).json()
+    resp = requests.post(config['subjob_runner_url'], data=json.dumps(payload)).json()
     # TODO handle error response
     return resp
 
@@ -55,7 +55,7 @@ def wait_for_job(job_id):
     """
     wait_interval = 1
     total_wait = 0
-    max_wait = _runtime_limit  # 60 mins
+    max_wait = config['runtime_limit']  # 60 mins
     while total_wait < max_wait:
         resp = check_job(job_id)
         # TODO handle error result from job
@@ -66,4 +66,4 @@ def wait_for_job(job_id):
         wait_interval += 5
         time.sleep(wait_interval)
     # TODO return failure value rather than raising
-    raise RuntimeError("Job failed to complete in %s seconds" % _runtime_limit)
+    raise RuntimeError(f"Job failed to complete in {max_wait} seconds")

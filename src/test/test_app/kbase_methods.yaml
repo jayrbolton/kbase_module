@@ -1,0 +1,10 @@
+echo:
+  title: Echo
+  description: Repeat a message back to you
+  required_params: [message]
+  params:
+    message:
+      title: Message
+      decription: String to echo back
+      type: string
+      minLength: 1
