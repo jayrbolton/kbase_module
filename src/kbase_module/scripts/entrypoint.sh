@@ -5,6 +5,8 @@
 
 set -e
 
+KBASE_MODULE_PATH=${KBASE_MODULE_PATH:-"/kb/module"}
+
 # Set the number of gevent workers to number of cores * 2 + 1
 # See: http://docs.gunicorn.org/en/stable/design.html#how-many-workers
 calc_workers="$(($(nproc) * 2 + 1))"
